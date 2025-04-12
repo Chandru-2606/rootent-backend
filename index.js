@@ -12,7 +12,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(helmet());
 const corsOptions = {
-    origin : ['https://rootent-frontend.vercel.app/','http://localhost:3000']
+    origin : ['https://rootent-frontend.vercel.app','http://localhost:3000']
 }
 app.use(cors(corsOptions));
 app.use(morgan('dev'));
