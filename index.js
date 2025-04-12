@@ -10,7 +10,10 @@ connectDB();
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(cors());
+const corsOptions = {
+    origin : ['https://rootent-frontend.vercel.app/','http://localhost:3000']
+}
+app.use(cors(corsOptions));
 app.use(helmet());
 app.use(morgan('dev'));
 
