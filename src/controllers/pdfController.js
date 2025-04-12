@@ -2,6 +2,7 @@ const pdfService = require('../services/pdfService');
 const resumeService = require('../services/resumeService');
 const fs = require('fs');
 const path = require('path');
+const os = require('os');
 
 exports.generateAndDownloadPdf = async (req, res) => {
   try {
@@ -10,7 +11,8 @@ exports.generateAndDownloadPdf = async (req, res) => {
     if (!resume) {
       return res.status(404).json({ status: 'error', message: 'Resume not found' });
     }
-    const pdfDir = path.join(__dirname, '../../temp/pdfs');
+    // Use the OS temporary directory which is writable in Vercel
+    const pdfDir = path.join(os.tmpdir(), 'pdfs');
     if (!fs.existsSync(pdfDir)) {
       fs.mkdirSync(pdfDir, { recursive: true });
     }
@@ -27,7 +29,9 @@ exports.generateAndDownloadPdf = async (req, res) => {
     });
     fileStream.pipe(res);
     fileStream.on('end', () => {
-      fs.unlink(pdfPath, (err) => { if (err) console.error('Error deleting temporary PDF:', err); });
+      fs.unlink(pdfPath, (err) => {
+        if (err) console.error('Error deleting temporary PDF:', err);
+      });
     });
   } catch (error) {
     res.status(500).json({ status: 'error', message: error.message || 'Error generating PDF' });
